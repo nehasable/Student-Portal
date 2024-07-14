@@ -1,36 +1,45 @@
-import React from 'react'
-import { useState } from 'react';
-import { Link } from "react-router-dom";
+import React, { useState } from 'react';
+import { useNavigate,Link } from 'react-router-dom';
+import axios from 'axios';
+
 const SignUp = () => {
-    const [username, setUsername] = useState("");
-    const [password, setPassword] = useState("");
-    const [error, setError] = useState("");
-  
-    const handleLogin = async () => {
-      try {
-        const response = await axios.post("http://localhost:8000/auth/login", {
-          username,
-          password,
-        });
-        const { token, user } = response.data;
-        console.log(token);
-        localStorage.setItem("token", token);
-        localStorage.setItem("user", JSON.stringify(user));
-        // Redirect to dashboard or another page
-      } catch (err) {
-        setError(err.response.data.message);
+  const [name, setName] = useState("");
+  const [password, setPassword] = useState("");
+  const [mobileNo, setMobileNo] = useState("");
+  const [role, setRole] = useState("");
+  const [error, setError] = useState("");
+  const navigate = useNavigate();
+
+  const handleSignUp = async () => {
+    try {
+      const response = await axios.post("http://localhost:8088/user", {
+        name,
+        password,
+        mobileNo,
+        role
+      });
+
+      if (response.data) {
+        console.log('User signed up successfully');
+        navigate('/'); // redirect to dashboard
+      } else {
+        console.log('Unexpected response format:', response);
+        setError('Unexpected response from the server');
       }
-    };
+    } catch (err) {
+      console.error('Error during signup:', err);
+      setError(err.response?.data?.message || 'An error occurred');
+    }
+  };
+
   return (
-    <div>
-     <div>
-       <div className="login-container">
+    <div className="signup-container">
       <h2>Sign Up</h2>
       <input
         type="text"
         placeholder="Username"
-        value={username}
-        onChange={(e) => setUsername(e.target.value)}
+        value={name}
+        onChange={(e) => setName(e.target.value)}
       />
       <input
         type="password"
@@ -40,14 +49,21 @@ const SignUp = () => {
       />
       <input
         type='text'
-        placeholder='Role'
+        placeholder='Mobile No'
+        value={mobileNo}
+        onChange={(e) => setMobileNo(e.target.value)}
       />
-      <Link to="/"><button onClick={handleLogin}>Login</button></Link>
+      <input
+        type='text'
+        placeholder='Role'
+        value={role}
+        onChange={(e) => setRole(e.target.value)}
+      />
+      <button onClick={handleSignUp}>Sign Up</button>
       {error && <p>{error}</p>}
+      <Link to="/signin">Already have an account? Login here.</Link>
     </div>
-    </div> 
-    </div>
-  )
+  );
 }
 
-export default SignUp
+export default SignUp;

@@ -4,7 +4,7 @@ const userSchema = new mongoose.Schema(
     name: {
       type: String,
       required: true,
-      unique: true,
+    
     },
     password: {
       type: String,
@@ -12,7 +12,7 @@ const userSchema = new mongoose.Schema(
     },
     role: {
       type: String,
-      default: false,
+      required: true,
     },
     mobileNo:{
       type: Number,
@@ -22,4 +22,4 @@ const userSchema = new mongoose.Schema(
 
 );
 
-export default mongoose.model("schema",userSchema );
+export default mongoose.model("user",userSchema );
