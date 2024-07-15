@@ -20,14 +20,20 @@ const courseSchema = new mongoose.Schema({
   teachers: {
     type: mongoose.Schema.Types.ObjectId,
     required: true,
+    ref:'User.role'
     
   },
-  students: [
+  students: 
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'Student'
-    }
-  ],
+      ref: 'User.role'
+    },
+    status: {
+      type: String,
+      enum: ['pending', 'accepted', 'rejected'],
+      default: 'pending',
+    },
+
  
 });
 

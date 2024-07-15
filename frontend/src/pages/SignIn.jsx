@@ -29,12 +29,12 @@ const SignIn = () => {
     <div>
       <div className="login-container">
         <h2>Sign In</h2>
-        <input
+        {/* <input
           type="text"
           placeholder="Username"
           value={name}
           onChange={(e) => setName(e.target.value)}
-        />
+        /> */}
         <input
           type="password"
           placeholder="Password"

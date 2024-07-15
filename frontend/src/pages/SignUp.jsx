@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate,Link } from 'react-router-dom';
 import axios from 'axios';
-
+import "./SignUp.css"
 const SignUp = () => {
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
@@ -19,16 +19,19 @@ const SignUp = () => {
         role
       });
 
-      if (response.data) {
-        console.log('User signed up successfully');
-        navigate('/'); // redirect to dashboard
-      } else {
-        console.log('Unexpected response format:', response);
-        setError('Unexpected response from the server');
-      }
+      const { user } = response.data;
+
+      // navigate based on role
+      // if (role === 'student') {
+      //   navigate('/student');
+      // } else if (role === 'teacher') {
+      //   navigate('/teacher');
+      // } else {
+       
+      //   setError('Invalid role');
+      // }
     } catch (err) {
-      console.error('Error during signup:', err);
-      setError(err.response?.data?.message || 'An error occurred');
+      setError(err.response?.data?.message || 'Error signing up');
     }
   };
 
@@ -37,7 +40,7 @@ const SignUp = () => {
       <h2>Sign Up</h2>
       <input
         type="text"
-        placeholder="Username"
+        placeholder="Name"
         value={name}
         onChange={(e) => setName(e.target.value)}
       />
@@ -53,12 +56,11 @@ const SignUp = () => {
         value={mobileNo}
         onChange={(e) => setMobileNo(e.target.value)}
       />
-      <input
-        type='text'
-        placeholder='Role'
-        value={role}
-        onChange={(e) => setRole(e.target.value)}
-      />
+       {/* <select value={role} onChange={(e) => setRole(e.target.value)}>
+       <option value="">Select Role</option>
+          <option value="student">Student</option>
+          <option value="teacher">Teacher</option>
+        </select> */}
       <button onClick={handleSignUp}>Sign Up</button>
       {error && <p>{error}</p>}
       <Link to="/signin">Already have an account? Login here.</Link>

@@ -3,11 +3,13 @@ import mongoose from 'mongoose'
 import dotenv from 'dotenv'
 import cors from 'cors'
 import UserRoutes from './routes/UserRoutes.js'
+import CourseRoutes from './routes/CourseRoutes.js'
 const app= express();
 app.use(cors());
 dotenv.config();
 app.use(express.json());
 app.use('/',UserRoutes)
+app.use('/course',CourseRoutes)
 
 const connect=async()=>{
     try{
