@@ -2,34 +2,42 @@ import React, { useState } from 'react';
 import { useNavigate,Link } from 'react-router-dom';
 import axios from 'axios';
 import "./SignUp.css"
-const SignUp = () => {
+const SignUp = ({role}) => {
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const [mobileNo, setMobileNo] = useState("");
-  const [role, setRole] = useState("");
+  // const [role, setRole] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
+  
+
   const handleSignUp = async () => {
-    try {
+    const mobileRegex = /^[0-9]{10}$/;
+    if (!mobileRegex.test(mobileNo)) {
+      setError('Invalid mobile number. It should be 10 digits.');
+      return;
+    }
+
+ try {
       const response = await axios.post("http://localhost:8088/user", {
         name,
         password,
         mobileNo,
         role
       });
-
+     
       const { user } = response.data;
 
       // navigate based on role
-      // if (role === 'student') {
-      //   navigate('/student');
-      // } else if (role === 'teacher') {
-      //   navigate('/teacher');
-      // } else {
+      if (role === 'student') {
+        navigate('/student');
+      } else if (role === 'teacher') {
+        navigate('/teacher');
+      } else {
        
-      //   setError('Invalid role');
-      // }
+        setError('Invalid role');
+      }
     } catch (err) {
       setError(err.response?.data?.message || 'Error signing up');
     }

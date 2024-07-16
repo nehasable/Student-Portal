@@ -1,7 +1,7 @@
 import React, { useState,useEffect } from 'react';
 import axios from 'axios';
 
-const CourseForm = ({ fetchCourses, studentId }) => {
+const CourseForm = ({  studentId }) => {
   const [name, setName] = useState('');
   const [startTime, setStartTime] = useState('');
   const [endTime, setEndTime] = useState('');

@@ -12,11 +12,12 @@ const userSchema = new mongoose.Schema(
     },
     role: {
       type: String,
-      required: true,
+      
     },
     mobileNo:{
       type: Number,
       required: true,
+      match: /^[0-9]{10}$/
     }
   },
 
