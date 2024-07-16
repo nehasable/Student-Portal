@@ -9,6 +9,7 @@ const SignIn = ({}) => {
   const [mobileNo, setMobileNo] = useState("");
   // const [role, setRole] = useState("");
   const [roles,setRoles]=useState([])
+  const [showInputs,setShowInputs]=useState(true)
   const [error, setError] = useState("");
   const navigate = useNavigate();
  
@@ -19,7 +20,12 @@ const SignIn = ({}) => {
       console.log("bbbb")
       
      
-      const response = await axios.post("http://localhost:8088/signin", { password, mobileNo });
+      const response = await axios.post("http://localhost:8088/signin", { password, mobileNo },
+        {
+          headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}` 
+        }
+    });
       const { token, user ,roles} = response.data;
       console.log(user)
       console.log(response.data)
@@ -47,6 +53,8 @@ const SignIn = ({}) => {
           value={name}
           onChange={(e) => setName(e.target.value)}
         /> */}
+        {/* {showInputs && ( */}
+          <>
           <input
           type="text"
           placeholder="Mobile No"
@@ -62,19 +70,21 @@ const SignIn = ({}) => {
        
         
         <button onClick={handleLogin}  >Login</button>
+        </>
+      {/* )} */}
         {error && <p>{error}</p>}
 
-        
-        {roles.length > 1 && (
-          <div>
-            {roles.includes('student') && (
-              <Link to="/student">Login as Student</Link>
-            )}
-            {roles.includes('teacher') && (
-              <Link to="/teacher">Login as Teacher</Link>
-            )}
-          </div>
-        )}
+        { roles.length > 1 && (
+  <div>
+    {roles.includes('student') && (
+      <Link to="/student">Login as Student</Link>
+    )}
+    {roles.includes('teacher') && (
+      <Link to="/teacher">Login as Teacher</Link>
+    )}
+  </div>
+)}
+
       </div>
     </div>
   );

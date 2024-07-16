@@ -1,5 +1,7 @@
 import React, { useState,useEffect } from 'react';
 import axios from 'axios';
+import { Link, useNavigate } from 'react-router-dom';
+import './Student.css'
 
 const CourseForm = ({  studentId }) => {
   const [name, setName] = useState('');
@@ -8,6 +10,14 @@ const CourseForm = ({  studentId }) => {
   const [teacherName, setTeacherName] = useState('');
   const [courses, setCourses] = useState([]);
   const [error, setError] = useState('');
+
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    navigate('/signin');
+  };
 
   useEffect(() => {
     const fetchCourses = async () => {
@@ -83,13 +93,15 @@ const CourseForm = ({  studentId }) => {
         <button type="submit">Submit</button>
         {error && <p>{error}</p>}
       </form>
-      <h2>My Courses</h2>
+      {/* <h2>My Courses</h2>
       <ul>
         {courses.map(course => (
           <li key={course._id}>{course.name} - {course.status}</li>
         ))}
-      </ul>
-
+      </ul> */}
+      <button className="logout-button" onClick={handleLogout}>
+        Logout
+      </button>
     </div>
   );
 };
