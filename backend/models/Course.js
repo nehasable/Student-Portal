@@ -6,6 +6,10 @@ const courseSchema = new mongoose.Schema({
     required: true,
   
   },
+  date: {
+    type: Date,   //YYYY-MM-DD
+    required: true,
+  },
   startTime: {
     type: String,
     required: true,
@@ -17,9 +21,17 @@ const courseSchema = new mongoose.Schema({
     required: true,
    
   },
-  teachers: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-  students: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-  status: { type: String, enum: ['pending', 'approved', 'rejected'], default: 'pending' },
+  teachers: { 
+    type: mongoose.Schema.Types.ObjectId,
+     ref: 'User' 
+    },
+  students: { 
+    type: mongoose.Schema.Types.ObjectId, 
+    ref: 'User'
+   },
+  status: { 
+    type: String, enum: ['pending', 'approved', 'rejected'], 
+    default: 'pending' },
 
  
 });

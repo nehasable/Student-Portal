@@ -1,8 +1,8 @@
-.teacher-dashboard{
+/* .teacher-dashboard{
     display: flex;
-    
+    flex-direction: row;
   
-}
+} */
 .course-item {
     border: 1px solid #ccc;
     padding: 10px;
@@ -28,6 +28,7 @@
   }
   
   .teacher-dashboard .courses-list {
+    margin-top: 150px;
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: 20px;

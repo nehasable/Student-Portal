@@ -5,6 +5,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
+import moment from 'moment'
 import './CourseForm.css';
 
 const CourseForm = ({ studentId }) => {
@@ -13,6 +14,7 @@ const CourseForm = ({ studentId }) => {
   const [endTime, setEndTime] = useState(dayjs().add(30, 'minute'));
   const [teacherName, setTeacherName] = useState('');
   const [teachers, setTeachers] = useState([]);
+  const [date, setDate] = useState();
   const [error, setError] = useState('');
   const [loading,setLoading]=useState(false);               //true when clicked
   console.log(name,studentId)
@@ -47,8 +49,11 @@ const CourseForm = ({ studentId }) => {
     }
     setLoading(true);
     try {
+      const formattedDate = moment(new Date(date)).format('YYYY-MM-DD')
+      alert(formattedDate)
       const response = await axios.post('http://localhost:8088/course', {
         name,
+        date:formattedDate,
         startTime: startTime.format('HH:mm'),
         endTime: endTime.format('HH:mm'),
         teacherName,
@@ -77,8 +82,17 @@ const CourseForm = ({ studentId }) => {
       <div className="home">
         <h1>Book a Course</h1>
         <form onSubmit={handleSubmit}>
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DatePicker />
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DatePicker
+              value={date}
+
+              onChange={(date,dateString) =>{
+                setDate(date)
+                // alert(new Date(date))
+                // console.log(dateString)
+              } }
+              renderInput={(params) => <input {...params} />}
+            />
           </LocalizationProvider>
           <label>
             Course Name:

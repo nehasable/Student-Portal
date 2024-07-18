@@ -2,13 +2,13 @@ import express from "express"
 import mongoose from 'mongoose';
 import Course from '../models/Course.js'
 import User from '../models/User.js'
-
+import moment from 'moment';
 const app=express()
 
 
 
 export const createCourse = async (req, res) => {
-  const { name, startTime, endTime, teacherName, studentId } = req.body;
+  const { name, date,startTime, endTime, teacherName, studentId } = req.body;
 
   try {
     // console.log("Creating course with data:", { name, startTime, endTime, teacherName, studentId });
@@ -24,10 +24,12 @@ export const createCourse = async (req, res) => {
     if (!teacher) {
       return res.status(404).json({ message: 'Teacher not found' });
     }
+    // const formattedDate = moment(date, 'MM DD YYYY').format('MM DD YYYY');
 
     // Create new course
     const newCourse = new Course({
       name,
+      date,
       startTime,
       endTime,
       teachers: new mongoose.Types.ObjectId(teacher._id), // new
@@ -36,6 +38,7 @@ export const createCourse = async (req, res) => {
 
     await newCourse.save();
     console.log("New course created:", newCourse);
+    console.log(date);
     res.status(201).json(newCourse);
   } catch (error) {
     console.error('Error creating course:', error);
