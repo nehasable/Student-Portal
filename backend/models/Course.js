@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-
+import User from './User.js'
 const courseSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -17,22 +17,9 @@ const courseSchema = new mongoose.Schema({
     required: true,
    
   },
-  teachers: {
-    type: mongoose.Schema.Types.ObjectId,
-    required: true,
-    ref:'User.role'
-    
-  },
-  students: 
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'User.role'
-    },
-    status: {
-      type: String,
-      enum: ['pending', 'accepted', 'rejected'],
-      default: 'pending',
-    },
+  teachers: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+  students: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+  status: { type: String, enum: ['pending', 'approved', 'rejected'], default: 'pending' },
 
  
 });

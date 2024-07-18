@@ -32,7 +32,7 @@ function App() {
     <>
        <BrowserRouter>
       <Routes>
-      <Route path="/intermediate" element={<Intermediate/>}/>
+      <Route path="/home" element={<Home/>}/>
        <Route path="/signin" element={<SignIn />} />
        <Route path="/student/signup" element={ <StudentSignUp/>} /> 
        <Route path="/teacher/signup" element={ <TeacherSignUp/>} /> 
@@ -40,11 +40,11 @@ function App() {
        {/* <Route path="/student" element={<PrivateRoutes><Student/></PrivateRoutes>} />
        <Route path="/teacher" element={<PrivateRoutes><Teacher/></PrivateRoutes>} /> */}
       
-       <Route element={<PrivateRoutes />}>
+       {/* <Route element={<PrivateRoutes />}>
           <Route path="/student" element={<Student />} />
           <Route path="/teacher" element={<Teacher />} />
-        </Route>
-  
+        </Route> */}
+        <Route path="/*" element={<PrivateRoutes />} />
       </Routes>
     </BrowserRouter>
     </>

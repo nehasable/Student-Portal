@@ -1,0 +1,47 @@
+.course-form{
+    height: 400px;
+    width: 300px;
+    display: flex;
+    padding: 30px;
+    font-size: 16px;
+}   
+.course-form h1{
+   display: flex;
+   justify-content: center;
+}
+.course-form form{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 50px;
+    background-color: #fafafa;
+    height: 600px;
+    width: 500px;
+}
+.course-form button{
+    background-color:  rgb(110, 167, 232);
+    border: none;
+    border-radius: 4px;
+    height: 50px;
+    width: 120px;
+}
+.course-form input{
+    width: 300px;
+    padding: 10px;
+    margin: 10px 0;
+    /* border: 1px solid #ccc;
+    border-radius: 4px; */
+    
+   
+}
+.teachers{
+    background-color: white;
+    border: '1px solid #ccc';
+}
+.teacher-item{
+   
+    padding: '8px';
+    border: '1px solid #ccc';
+    margin: '5px 0',
+  }

@@ -1,53 +1,26 @@
+.student-container{
+  display: flex;
+  flex-direction: column;
+  font-family:'Times New Roman', Times, serif;
+}
 
 
-.course-form {
-    max-width: 600px;
-    margin: 0 auto;
-    padding: 20px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    background-color: #f9f9f9;
-    text-align: center;
-  }
-  
-  .course-form input[type='text'],
-  .course-form input[type='password'],
-  .course-form button {
-    display: block;
-    width: 100%;
-    margin: 10px 0;
-    padding: 10px;
-    font-size: 16px;
-  }
-  
-  .course-form button {
-    background-color: #007bff;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  
-  .course-form button:hover {
-    background-color: #0056b3;
-  }
-  
-  p.error-message {
-    color: red;
-    margin-top: 10px;
-  }
-  
-  .logout-button {
-    background-color: #dc3545;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    padding: 10px 20px;
-    cursor: pointer;
-    margin-top: 20px;
-  }
-  
-  .logout-button:hover {
-    background-color: #c82333;
-  }
-  
+.logout-button{
+  height: 20px;
+  width: 80px;
+  background-color: transparent;
+  border: none;
+  font-size: 15px;
+  font-family:'Times New Roman', Times, serif;
+  margin-right: 60px;
+  cursor: pointer; /* Change cursor on hover */
+}
+
+.logout-button:hover {
+  background-color: #417fc1; /* Darker background color on hover */
+}
+
+.content {
+  width: 100%;
+  padding: 20px; /* Add some padding */
+}

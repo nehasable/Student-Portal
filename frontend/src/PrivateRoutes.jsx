@@ -95,38 +95,49 @@
 
 ///final
 
-import React from "react";
-import { Routes, Route, Navigate,Outlet } from "react-router-dom";
+import React, { useEffect } from "react";
+import { Routes, Route,  Navigate,Outlet, useNavigate } from "react-router-dom";
+import Student from './pages/student/Student';
+import Teacher from './pages/teacher/Teacher';
+import { useLocation } from 'react-router-dom'
+import CourseForm from './pages/student/CourseForm/CourseForm';
+import Classes from './pages/student/Classes/Classes';
+import ListClass from "./pages/student/Classes/ListClass";
+import TeacherCourses from "./pages/teacher/TeacherCourses";
 
-const PrivateRoutes = () => {
+const PrivateRoutes = () => { 
   const token = localStorage.getItem("token");
   const role = JSON.parse(localStorage.getItem("user"))?.role;
+  const location = useLocation();
+  const navigate = useNavigate();
 
-  if (!token) {
-    return <Navigate to="/signin" />;
-  }
+  useEffect(() => {    
+    if (!token) {
+      navigate("/signin");
+    }
+  }, []);
 
-  if (role === "student") {
-    return (
+  return (
+    <>
+    {
+      role === "student" ?
       <Routes>
-       
-        <Route path="/student" element={<Outlet />} />
-        <Route path="/teacher" element={<Navigate to="/student" />} /> {/* redirect teacher to student */}
-        <Route path="/signin" element={<Navigate to="/student" />} /> {/* redirect signin to student */}
+        <Route path="/student" element={<Student />} />
+        {/* <Route path="/book" element={<CourseForm />} /> */}
+        <Route path="/classes" element={<ListClass />} />
+        <Route path="*" element={<Navigate to='/student' replace />} />
       </Routes>
-    );
-  } else if (role === "teacher") {
-    return (
+      :
+      role === "teacher" ?
       <Routes>
-        
-        <Route path="/student" element={<Navigate to="/teacher" />} /> {/* redirect student to teacher */}
-        <Route path="/teacher" element={<Outlet />} />
-        <Route path="/signin" element={<Navigate to="/teacher" />} /> {/* redirect signin to teacher */}
+        <Route path="/teacher" element={<TeacherCourses />} /> 
+        <Route path="*" element={<Navigate to='/teacher' replace />} />
       </Routes>
-    );
-  }
-
-  return <Navigate to="/signin" />; // redirection if token or role is invalid
+      :
+      <Navigate to="/signin" />
+    }
+    </>
+  )
 };
 
 export default PrivateRoutes;

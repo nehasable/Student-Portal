@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link,useNavigate } from "react-router-dom";
 import axios from 'axios';
 import "./SignIn.css";
@@ -41,6 +41,13 @@ const SignIn = ({}) => {
       setError(err.response?.data?.message || 'Error signing in');
     }
   };
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      navigate("/");
+    }
+  }, [])
 
   return (
     <div>

@@ -60,3 +60,19 @@ export const signInUser = async (req, res) => {
     console.error(error);
   }
 };
+export const getTeachers = async (req, res) => {
+  const { name } = req.query;
+  console.log(name);
+  try {
+    const query = {
+      $and: [
+        { role: "teacher" },
+        name ? { name: { $regex: name, $options: "i" } } : {},
+      ],
+    };
+    const teachers = await User.find(query);
+    res.status(200).json(teachers);
+  } catch (error) {
+    res.status(500).json({ message: "Server Error" });
+  }
+};
