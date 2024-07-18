@@ -1,0 +1,22 @@
+.container {
+    padding: 20px;
+  }
+  
+  .container h2 {
+    color: #333;
+  }
+  
+  .courseList {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .courseItem {
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: #f9f9f9;
+    margin: 10px 0;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+  }
+  

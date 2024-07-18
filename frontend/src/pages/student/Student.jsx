@@ -9,11 +9,7 @@ const Student = () => {
   const navigate = useNavigate();
   const student = JSON.parse(localStorage.getItem('user'));
   const studentId = student ? student._id : null;
-  const handleLogout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
-    navigate('/signin');
-  };
+
 
   return (
     <div className='student-container'> 

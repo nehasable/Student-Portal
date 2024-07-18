@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Navbar from '../../../components/Navbar';
-
+import "./Classes.css"
 const Classes = ({ studentId }) => {
   const [courses, setCourses] = useState([]);
 
@@ -27,13 +27,13 @@ const Classes = ({ studentId }) => {
   }, [studentId]);
 
   return (
-    <div>
+    <div className='container'>
       <Navbar/>
-      <h3>All Classes</h3>
+     
       <h2>My Courses</h2>
-      <ul>
+      <ul className='courseList'>
         {courses.map(course => (
-          <li key={course._id}>{course.name}</li>
+          <li className='courseItem' key={course._id}>{course.name}</li>
         ))}
       </ul>
     </div>

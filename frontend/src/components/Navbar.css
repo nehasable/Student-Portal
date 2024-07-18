@@ -7,7 +7,7 @@
     gap: 50px;
     justify-content: flex-end;
     padding: 10px 20px;
-    
+    font-family: Arial, Helvetica, sans-serif;
   }
   .navbar .home{
     margin-right: 900px;

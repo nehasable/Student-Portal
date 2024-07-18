@@ -38,6 +38,7 @@ const SignUp = ({role}) => {
        
         setError('Invalid role');
       }
+      console.log(role)
     } catch (err) {
       setError(err.response?.data?.message || 'Error signing up');
     }

@@ -14,6 +14,11 @@ const SignIn = ({}) => {
   const navigate = useNavigate();
 
   const handleLogin = async () => {
+    const mobileRegex = /^[0-9]{10}$/;
+    if (!mobileRegex.test(mobileNo)) {
+      setError('Invalid mobile number. It should be 10 digits.');
+      return;
+    }
     try {
       console.log("bbbb");
 
