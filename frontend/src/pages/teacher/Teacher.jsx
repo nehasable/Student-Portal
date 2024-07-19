@@ -16,13 +16,13 @@ const Teacher = ({ teacherId }) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetchCourses(startDate, endDate); // Initial fetch with default dates
+    fetchCourses(startDate, endDate); // initial fetch with default dates
   }, [teacherId, startDate, endDate]);
 
   const fetchCourses = async (start, end) => {
     try {
-      const formattedStartDate = moment(start).format('YYYY-MM-DD');
-      const formattedEndDate = moment(end).format('YYYY-MM-DD');
+      const formattedStartDate = moment(new Date(start)).format('YYYY-MM-DD');
+      const formattedEndDate = moment(new Date(end)).format('YYYY-MM-DD');
       console.log("Fetching courses from:", formattedStartDate, "to:", formattedEndDate);
 
       const response = await axios.get(`http://localhost:8088/course/teacher/${teacherId}`, {
@@ -53,7 +53,7 @@ const Teacher = ({ teacherId }) => {
     if (endDate.isBefore(date)) {
       setEndDate(date.add(1, 'day'));
     }
-    fetchCourses(date, endDate); // Fetch courses when start date changes
+    // fetchCourses(date, endDate); // fetch courses when start date changes
   };
 
   const handleEndDate = (date) => {
@@ -61,15 +61,7 @@ const Teacher = ({ teacherId }) => {
     if (date.isBefore(startDate)) {
       setStartDate(date);
     }
-    fetchCourses(startDate, date); // Fetch courses when end date changes
-  };
-
-  const handleSelect = (date) => {
-    const filtered = allCourses.filter((course) => {
-      const courseDate = moment(course.date).format('YYYY-MM-DD');
-      return moment(courseDate).isSameOrAfter(startDate) && moment(courseDate).isSameOrBefore(endDate);
-    });
-    setCourses(filtered);
+    // fetchCourses(startDate, date); // fetch courses when end date changes
   };
 
   const handleLogout = () => {
@@ -98,19 +90,19 @@ const Teacher = ({ teacherId }) => {
           minDate={startDate}
           renderInput={(params) => <input {...params} />}
         />
-        <button onClick={handleSelect}>Select</button> {/* Button to trigger date range filter */}
+        {/* <button onClick={handleSelect}>Select</button> Button to trigger date range filter */}
       </LocalizationProvider>
 
       <div className="courses-list">
         {courses.map((course) => (
           <div key={course._id} className="course-item">
             <h3>{course.name}</h3>
-            <p>Date: {moment(course.date).format('YYYY-MM-DD')}</p>
+            <p>Date: {moment(new Date(course.date)).format('YYYY-MM-DD')}</p>
             <p>Start Time: {course.startTime}</p>
             <p>End Time: {course.endTime}</p>
             <p>Status: {course.status}</p>
             {course.status === 'pending' && (
-              <div>
+              <div className='buttons'>
                 <button onClick={() => updateCourseStatus(course._id, 'accepted')}>Accept</button>
                 <button onClick={() => updateCourseStatus(course._id, 'rejected')}>Reject</button>
               </div>

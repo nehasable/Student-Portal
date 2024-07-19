@@ -1,9 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Navbar from '../../../components/Navbar';
-import "./Classes.css"
+import "./Classes.css";
+
 const Classes = ({ studentId }) => {
   const [courses, setCourses] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [search, setSearch] = useState('');
+  const itemsPerPage = 3;
 
   useEffect(() => {
     const fetchCourses = async () => {
@@ -12,30 +17,70 @@ const Classes = ({ studentId }) => {
         return;
       }
 
-      console.log('Student ID:', studentId); // Log studentId for debugging
+      console.log('Fetching courses for student ID:', studentId);
 
       try {
-        const response = await axios.get(`http://localhost:8088/course/${studentId}`);
+        const response = await axios.get(`http://localhost:8088/course/${studentId}`, {
+          params: {
+            page: currentPage,
+            limit: itemsPerPage,
+            search: search 
+          }
+        });
+
         console.log('Fetched courses:', response.data);
-        setCourses(response.data);
+        console.log('Courses',courses)
+        setCourses(response.data.courses || []);
+        setTotalPages(response.data.totalPages || 1);
       } catch (err) {
         console.error('Error fetching courses:', err);
       }
     };
 
     fetchCourses();
-  }, [studentId]);
+  }, [studentId, currentPage, search]);
+
+  const handlePageChange = (page) => {
+    if (page >= 1 && page <= totalPages) {
+      setCurrentPage(page);
+    }
+  };
+
+  const handleSearchChange = (event) => {
+    setSearch(event.target.value);
+    setCurrentPage(1); // Reset to the first page when search term changes
+  };
 
   return (
     <div className='container'>
       <Navbar/>
      
       <h2>My Courses</h2>
+      
+      <div className='search-container'>
+        <input 
+          type="text" 
+          placeholder="Search courses..." 
+          value={search} 
+          onChange={handleSearchChange} 
+        />
+      </div>
+      
       <ul className='courseList'>
         {courses.map(course => (
-          <li className='courseItem' key={course._id}>{course.name}</li>
+          <li className='courseItem' key={course._id}>{course.name} - {course.teachers|| 'No teacher assigned'}</li>
         ))}
       </ul>
+
+      <div className='pagination'>
+        <button onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 1}>
+          Previous
+        </button>
+        <span>Page {currentPage} of {totalPages}</span>
+        <button onClick={() => handlePageChange(currentPage + 1)} disabled={currentPage === totalPages}>
+          Next
+        </button>
+      </div>
     </div>
   );
 };

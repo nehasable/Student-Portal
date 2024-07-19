@@ -48,16 +48,46 @@ export const createCourse = async (req, res) => {
 
 //FETCH
 export const getCoursesByStudent = async (req, res) => {
-    const { studentId } = req.params;
-    console.log(studentId)
-    try {
-      const courses = await Course.find({ students: studentId })
-      res.status(200).json(courses);
-    }catch (error) {
+  const { studentId } = req.params;
+  const { page = 1, limit = 3, search = '' } = req.query; // default 
+
+  try {
+    
+      const pageNumber = parseInt(page, 10) || 1; 
+      const limitNumber = parseInt(limit, 3) || 3; 
+    
+      const skip = (pageNumber - 1) * limitNumber;
+
+   
+      const query = { students: studentId };
+     
+      if (search) {
+          query.name = { $regex: search, $options: 'i' }; 
+      }
+
+   
+      const totalCourses = await Course.countDocuments(query);
+
+   
+      const courses = await Course.find(query)
+          .skip(skip)
+          .limit(limitNumber);
+
+    
+      const totalPages = Math.ceil(totalCourses / limitNumber);
+
+      res.status(200).json({
+          courses,
+          totalPages
+      });
+  } catch (error) {
       console.error('Error fetching courses:', error);
-      res.status(500).json({ message: 'fetching Server Error' });
-    }
-  };
+      res.status(500).json({ message: 'Server Error' });
+  }
+};
+
+
+
 //UPDATE  
 export const updateCourse=async(req,res)=>{
     const {courseId}=req.params;
@@ -75,11 +105,21 @@ export const updateCourse=async(req,res)=>{
       res.status(500).json({ message: 'Server Error' });
     }
 }
+//COURSES BY
 export const getCoursesByTeacher = async (req, res) => {
   const { teacherId } = req.params;
-  console.log(teacherId);
+  const { startDate, endDate } = req.query;               
+
+  console.log("params",teacherId, startDate, endDate);
   try {
-    const courses = await Course.find({ teachers: teacherId })
+    // const query={courseName:{$regex}}
+    const courses = await Course.find({ teachers: teacherId ,
+      date: {
+      $gte: startDate,
+      $lte: endDate
+   
+    }})
+    console.log(courses);
     res.json(courses);
   } catch (error) {
     console.error('Error fetching courses for teacher:', error);
