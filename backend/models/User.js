@@ -15,7 +15,7 @@ const userSchema = new mongoose.Schema(
       
     },
     mobileNo:{
-      type: Number,
+      type: String,
       required: true,
       match: /^[0-9]{10}$/
     }

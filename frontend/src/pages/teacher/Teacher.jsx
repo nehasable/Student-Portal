@@ -10,30 +10,36 @@ import moment from 'moment';
 
 const Teacher = ({ teacherId }) => {
   const [courses, setCourses] = useState([]);
-  const [allCourses, setAllCourses] = useState([]);
   const [startDate, setStartDate] = useState(dayjs());
   const [endDate, setEndDate] = useState(dayjs().add(1, 'day'));
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [searchItem, setSearchItem] = useState('');
+  const itemsPerPage = 3;
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetchCourses(startDate, endDate); // initial fetch with default dates
-  }, [teacherId, startDate, endDate]);
+    fetchCourses(startDate, endDate, currentPage, searchItem); // initial fetch with values
+  }, [teacherId, startDate, endDate, currentPage, searchItem]);
 
-  const fetchCourses = async (start, end) => {
+  const fetchCourses = async (start, end, page, search) => {
     try {
-      const formattedStartDate = moment(new Date(start)).format('YYYY-MM-DD');
-      const formattedEndDate = moment(new Date(end)).format('YYYY-MM-DD');
-      console.log("Fetching courses from:", formattedStartDate, "to:", formattedEndDate);
+      const formattedStartDate = moment(start.toDate()).format('YYYY-MM-DD');
+      const formattedEndDate = moment(end.toDate()).format('YYYY-MM-DD');
+      console.log("Fetching courses from:", formattedStartDate, "to:", formattedEndDate, "page:", page, "search:", search);
 
       const response = await axios.get(`http://localhost:8088/course/teacher/${teacherId}`, {
         params: {
+          search,
           startDate: formattedStartDate,
           endDate: formattedEndDate,
+          page,
+          limit: itemsPerPage
         },
       });
 
-      setCourses(response.data);
-      setAllCourses(response.data);
+      setCourses(response.data.courses || []);
+      setTotalPages(response.data.totalPages || 1);
     } catch (error) {
       console.error('Error fetching courses:', error);
     }
@@ -53,7 +59,6 @@ const Teacher = ({ teacherId }) => {
     if (endDate.isBefore(date)) {
       setEndDate(date.add(1, 'day'));
     }
-    // fetchCourses(date, endDate); // fetch courses when start date changes
   };
 
   const handleEndDate = (date) => {
@@ -61,7 +66,12 @@ const Teacher = ({ teacherId }) => {
     if (date.isBefore(startDate)) {
       setStartDate(date);
     }
-    // fetchCourses(startDate, date); // fetch courses when end date changes
+  };
+
+  const handlePageChange = (page) => {
+    if (page >= 1 && page <= totalPages) {
+      setCurrentPage(page);
+    }
   };
 
   const handleLogout = () => {
@@ -76,6 +86,18 @@ const Teacher = ({ teacherId }) => {
       <button className="logout-button" onClick={handleLogout}>
         Logout
       </button>
+      
+      <div>
+        <label>Search:</label>
+        <input
+          type="text"
+          id="search"
+          value={searchItem}
+          onChange={(e) => setSearchItem(e.target.value)}
+          placeholder="Search by course name, student, or teacher"
+        />
+      </div>
+      
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <DatePicker
           label="From"
@@ -90,13 +112,14 @@ const Teacher = ({ teacherId }) => {
           minDate={startDate}
           renderInput={(params) => <input {...params} />}
         />
-        {/* <button onClick={handleSelect}>Select</button> Button to trigger date range filter */}
       </LocalizationProvider>
 
       <div className="courses-list">
         {courses.map((course) => (
           <div key={course._id} className="course-item">
             <h3>{course.name}</h3>
+            <p>Student: {course.students.name}</p>
+            <p>Mobile: {course.students.mobileNo}</p>
             <p>Date: {moment(new Date(course.date)).format('YYYY-MM-DD')}</p>
             <p>Start Time: {course.startTime}</p>
             <p>End Time: {course.endTime}</p>
@@ -109,6 +132,16 @@ const Teacher = ({ teacherId }) => {
             )}
           </div>
         ))}
+      </div>
+
+      <div className="pagination">
+        <button onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 1}>
+          Previous
+        </button>
+        <span>Page {currentPage} of {totalPages}</span>
+        <button onClick={() => handlePageChange(currentPage + 1)} disabled={currentPage === totalPages}>
+          Next
+        </button>
       </div>
     </div>
   );

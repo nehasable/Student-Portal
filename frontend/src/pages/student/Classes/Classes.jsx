@@ -48,7 +48,7 @@ const Classes = ({ studentId }) => {
 
   const handleSearchChange = (event) => {
     setSearch(event.target.value);
-    setCurrentPage(1); // Reset to the first page when search term changes
+    setCurrentPage(1); // Reset
   };
 
   return (
@@ -68,7 +68,7 @@ const Classes = ({ studentId }) => {
       
       <ul className='courseList'>
         {courses.map(course => (
-          <li className='courseItem' key={course._id}>{course.name} - {course.teachers|| 'No teacher assigned'}</li>
+          <li className='courseItem' key={course._id}>{course.name}</li>
         ))}
       </ul>
 

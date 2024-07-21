@@ -23,11 +23,11 @@ const courseSchema = new mongoose.Schema({
   },
   teachers: { 
     type: mongoose.Schema.Types.ObjectId,
-     ref: 'User' 
+     ref: 'user' 
     },
   students: { 
     type: mongoose.Schema.Types.ObjectId, 
-    ref: 'User'
+    ref: 'user'
    },
   status: { 
     type: String, enum: ['pending', 'approved', 'rejected'], 
