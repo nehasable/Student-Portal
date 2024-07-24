@@ -4,18 +4,28 @@ import User from "../models/User.js";
 import jwt from "jsonwebtoken";
 const app = express();
 
+
 export const verifyToken = (req, res, next) => {
-  const authHeader = req.headers['authorization'];
-  const token = authHeader && authHeader.split(' ')[1];
-  if (!token) return res.status(403).send({ message: 'No token provided.' });
+    const authHeader = req.headers.authorization
 
-  jwt.verify(token, 'password', (err, decoded) => {
-    if (err) return res.status(500).send({ message: 'Failed to authenticate token.' });
+    if (!authHeader || !authHeader.startsWith('Bearer')) {
+        res.status(403).json({})
+    }
+    const token = authHeader.split(' ')[1]
+    console.log(token)
+    try {
+        const decoded = jwt.verify(token, JWT_SECRET)
+      
+            req.teacherId = decoded.teacherId
+            console.log("middleware",req.teacherId)
+            
+            next()
+        
 
-    req.userId = decoded.id;
-    console.log(req.userId)
-    next();
-  });
-};
-
-
+    }
+    catch (err) {
+        return res.status(403).json({
+            message:"not found"
+        });
+    }
+}

@@ -38,7 +38,7 @@ export const signInUser = async (req, res) => {
       const user = await User.findOne({ password, mobileNo });
 
       if (user) {
-        const token = jwt.sign({ id: user._id }, "password", {
+        const token = jwt.sign({ id: user._id ,role: user.role}, "password", {
           expiresIn: "1h",
         });
         res.status(200).json({ token, user: user, roles });

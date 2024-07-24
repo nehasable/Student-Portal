@@ -95,49 +95,74 @@
 
 ///final
 
-import React, { useEffect } from "react";
-import { Routes, Route,  Navigate,Outlet, useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
 import Student from './pages/student/Student';
 import Teacher from './pages/teacher/Teacher';
-import { useLocation } from 'react-router-dom'
 import CourseForm from './pages/student/CourseForm/CourseForm';
-import Classes from './pages/student/Classes/Classes';
 import ListClass from "./pages/student/Classes/ListClass";
 import TeacherCourses from "./pages/teacher/TeacherCourses";
+import TotalCourses from "./pages/teacher/TotalCourses";
+import Courses from "./pages/teacher/Courses";
 
-const PrivateRoutes = () => { 
+const PrivateRoutes = () => {
+  const [role, setRole] = useState(null);
+  const [loading, setLoading] = useState(true);
   const token = localStorage.getItem("token");
-  const role = JSON.parse(localStorage.getItem("user"))?.role;
-  const location = useLocation();
   const navigate = useNavigate();
 
-  useEffect(() => {    
+  useEffect(() => {
+    // Simulate async data fetching
+    const fetchRole = async () => {
+      try {
+        const user = localStorage.getItem("user");
+        const parsedUser = user ? JSON.parse(user) : null;
+        if (parsedUser && parsedUser.role) {
+          setRole(parsedUser.role);
+        } else {
+          setRole(null);
+        }
+      } catch (error) {
+        console.error("Failed to parse user data:", error);
+        setRole(null);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchRole();
+  }, []);
+
+  useEffect(() => {
     if (!token) {
       navigate("/signin");
     }
-  }, []);
+  }, [token, navigate]);
+
+  if (loading) {
+    return <div>Loading...</div>; // or some loading spinner
+  }
 
   return (
     <>
-    {
-      role === "student" ?
-      <Routes>
-        <Route path="/student" element={<Student />} />
-        {/* <Route path="/book" element={<CourseForm />} /> */}
-        <Route path="/classes" element={<ListClass />} />
-        <Route path="*" element={<Navigate to='/student' replace />} />
-      </Routes>
-      :
-      role === "teacher" ?
-      <Routes>
-        <Route path="/teacher" element={<TeacherCourses />} /> 
-        <Route path="*" element={<Navigate to='/teacher' replace />} />
-      </Routes>
-      :
-      <Navigate to="/signin" />
-    }
+      {role === "student" ? (
+        <Routes>
+          <Route path="/student" element={<Student />} />
+          <Route path="/book" element={<CourseForm />} />
+          <Route path="/classes" element={<ListClass />} />
+          <Route path="*" element={<Navigate to='/student' replace />} />
+        </Routes>
+      ) : role === "teacher" ? (
+        <Routes>
+          <Route path="/teacher" element={<TeacherCourses />} />
+          <Route path="*" element={<Navigate to='/teacher' replace />} />
+          <Route path="/teacher/classes" element={<Courses />} />
+        </Routes>
+      ) : (
+        <Navigate to="/signin" />
+      )}
     </>
-  )
+  );
 };
 
 export default PrivateRoutes;

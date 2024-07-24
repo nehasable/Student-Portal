@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './Teacher.css';
 import axios from 'axios';
 import dayjs from 'dayjs';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate,Link } from 'react-router-dom';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
@@ -15,12 +15,27 @@ const Teacher = ({ teacherId }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [searchItem, setSearchItem] = useState('');
+  const [debounceTimer, setDebounceTimer] = useState(null);
   const itemsPerPage = 3;
   const navigate = useNavigate();
 
   useEffect(() => {
     fetchCourses(startDate, endDate, currentPage, searchItem); // initial fetch with values
-  }, [teacherId, startDate, endDate, currentPage, searchItem]);
+  }, [teacherId, startDate, endDate, currentPage]);
+
+  useEffect(() => {
+    if (debounceTimer) {
+      clearTimeout(debounceTimer);
+    }
+
+    const newTimer = setTimeout(() => {
+      fetchCourses(startDate, endDate, currentPage, searchItem);
+    }, 500);
+
+    setDebounceTimer(newTimer);
+    // Cleanup timer on component unmount or searchItem change
+    return () => clearTimeout(newTimer);
+  }, [searchItem]);
 
   const fetchCourses = async (start, end, page, search) => {
     try {
@@ -80,21 +95,25 @@ const Teacher = ({ teacherId }) => {
     navigate('/signin');
   };
 
+  const handleSearchChange = (e) => {
+    setSearchItem(e.target.value);
+  };
+
   return (
     <div className="teacher-dashboard">
       <h2>Teacher Dashboard - My Classes</h2>
       <button className="logout-button" onClick={handleLogout}>
         Logout
       </button>
-      
+      <Link className="link"to="/teacher/classes">Total Classes</Link> 
       <div>
         <label>Search:</label>
         <input
           type="text"
           id="search"
           value={searchItem}
-          onChange={(e) => setSearchItem(e.target.value)}
-          placeholder="Search by course name, student, or teacher"
+          onChange={handleSearchChange}
+          placeholder="Search by student name or mobile number"
         />
       </div>
       
@@ -118,8 +137,8 @@ const Teacher = ({ teacherId }) => {
         {courses.map((course) => (
           <div key={course._id} className="course-item">
             <h3>{course.name}</h3>
-            <p>Student: {course.students.name}</p>
-            <p>Mobile: {course.students.mobileNo}</p>
+            <p>Student: {course.students?.name}</p>
+            <p>Mobile: {course.students?.mobileNo}</p>
             <p>Date: {moment(new Date(course.date)).format('YYYY-MM-DD')}</p>
             <p>Start Time: {course.startTime}</p>
             <p>End Time: {course.endTime}</p>
